@@ -4,6 +4,8 @@ namespace App\dao;
 
 use App\Models\Frais;
 use http\Env\Request;
+use function Laravel\Prompts\select;
+
 
 class FraisService
 {
@@ -25,17 +27,20 @@ class FraisService
     public function saveFrais(Frais $frais)
     {
         $frais->save();
+
+        return $frais;
     }
-    public function deleteFrais(Request $request)
+    public function deleteFrais($id_frais)
     {
-        try {
-            $fraisService = new FraisService();
-            $id_frais=$request->json("id_frais");
-            $fraisService->deleteFrais($id_frais);
-            return response()->json(['message' => 'Suppression réalisée', 'id_frais :' => $id_frais]);
-        } catch (QueryException $e) {
-            throw new Exception($e->getMessage());
+        $id_frais->select('frais.*')->where('id_frais',$id_frais);
+        $res=Frais::destroy($id_frais);
+        if(!$res) {
+            return response()->json(['Suppression réalisé',]);
         }
+        else {
+            return response()->json(['Suppression non réalisé',]);
+        }
+
     }
     public function getFraisByVisiteur($idVisiteur)
     {

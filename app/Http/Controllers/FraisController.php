@@ -6,6 +6,7 @@ use App\dao\FraisService;
 use App\Models\Frais;
 use App\Models\Visiteur;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class FraisController extends Controller
 {
@@ -43,16 +44,14 @@ class FraisController extends Controller
 
     }
     public function suppr(Request $request){
-        $id_frais= $request->json('id_frais');
-        $res=Frais::destroy($id_frais);
-        if(!$res) {
-            return response()->json(['Suppression réalisé',]);
+        try {
+            $fraisService = new FraisService();
+            $id_frais=$request->json("id_frais");
+            $fraisService->deleteFrais($id_frais);
+            return response()->json(['message' => 'Suppression réalisée', 'id_frais :' => $id_frais]);
+        } catch (QueryException $e) {
+            throw new Exception($e->getMessage());
         }
-        else {
-            return response()->json(['Suppression non réalisé',]);
-        }
-
-
     }
     public function listerById($idVisiteur)
     {

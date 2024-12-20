@@ -6,6 +6,7 @@ use http\Env\Response;
 use Illuminate\Http\Request;
 use App\Models\Visiteur;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class VisiteurController extends Controller
 {
@@ -22,7 +23,6 @@ class VisiteurController extends Controller
     }
     public function logIn(Request $request)
     {
-
         if ($request->isJson()) {
 
             $request->validate([
